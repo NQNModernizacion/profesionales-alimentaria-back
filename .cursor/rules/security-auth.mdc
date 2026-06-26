@@ -1,0 +1,13 @@
+---
+description: Security rules for authentication and tokens
+globs: src/auth/**/*.ts
+alwaysApply: false
+---
+
+# Security (auth)
+
+- Never log passwords, refresh tokens, or full JWT strings.
+- Validate token **type** (`access` vs `refresh`) before treating claims as authoritative.
+- Use constant-time comparisons where comparing secrets; prefer framework guards for JWT verification.
+- Redis JTI keys: `jti:<jti>`; revoke with TTL aligned to `exp`.
+- Errors: generic messages to clients (“Credenciales inválidas”); avoid leaking whether an email exists.

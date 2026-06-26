@@ -1,0 +1,13 @@
+---
+description: Layering and dependency direction for NestJS modules
+alwaysApply: true
+---
+
+# Architecture boundaries
+
+- **Controllers**: HTTP mapping, validation pipes, DTOs. No SQL/Redis/JWT crypto.
+- **Services**: orchestrate use cases; depend on repository interfaces or domain services.
+- **Repositories**: isolate persistence (Drizzle/Redis). No Nest HTTP types.
+- **Strategies/guards**: thin; delegate identity and token rules to injectable services.
+- **Cross-module imports**: prefer feature modules exporting facades; avoid deep imports across features.
+- **Identity**: MySQL `admin` read-only via repositories; PostgreSQL app DB for roles/votes — never merge identity tables into Postgres `users`.

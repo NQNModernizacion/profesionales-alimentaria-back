@@ -1,0 +1,13 @@
+---
+description: DRY, KISS, SOLID checklist before merging changes
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# DRY, KISS, SOLID
+
+- **DRY**: duplicated queries or mapping (`users` / `Usuarios` / `Personas`) belong in one repository + mapper.
+- **KISS**: strategies should orchestrate; avoid embedding SQL, JWT verify, and Redis in the same class.
+- **SRP**: split “who is the user?” (identity) from “is this JWT revoked?” (revocation) from “issue tokens” (auth service).
+- **OCP**: add new auth flows via new strategies/services, not by growing switch statements without bound.
+- **DIP**: depend on `AdminIdentityRepository` / `TokenRevocationRepository` interfaces, not concrete Redis/Drizzle in every consumer.

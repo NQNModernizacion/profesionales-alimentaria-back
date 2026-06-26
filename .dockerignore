@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.*
+!.env.docker.example
+!.env.test.docker.example
+.serena
+.vscode
+coverage
+*.log
+terminals
+agent-transcripts

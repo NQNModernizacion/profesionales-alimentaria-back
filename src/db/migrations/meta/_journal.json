@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1774969030030,
+      "tag": "0000_petite_slipstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775481236434,
+      "tag": "0001_shocking_whizzer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775600000000,
+      "tag": "0002_admin_panel_permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1775800000000,
+      "tag": "0003_vote_unique_campaigns",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775900000000,
+      "tag": "0004_voter_identity_type",
+      "breakpoints": true
+    }
+  ]
+}

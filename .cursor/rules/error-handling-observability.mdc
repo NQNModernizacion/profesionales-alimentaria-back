@@ -1,0 +1,12 @@
+---
+description: Exceptions and logging expectations
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# Error handling and observability
+
+- Use Nest HTTP exceptions (`UnauthorizedException`, `NotFoundException`, etc.) for API errors.
+- Map infrastructure failures (e.g. federated MySQL unavailable) to `503` with a safe message — no stack traces to clients.
+- Log with `Logger`: include operation and ids where useful; never log secrets or full tokens.
+- Re-throw unknown errors after logging; do not swallow exceptions with empty `catch`.

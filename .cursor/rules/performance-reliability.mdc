@@ -1,0 +1,12 @@
+---
+description: Performance and reliability for backend handlers
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# Performance and reliability
+
+- Avoid N+1 queries: batch or join in repository when listing related data.
+- Redis: use TTL on revocation keys; prefer pipelines for multiple reads in hot paths.
+- Timeouts: respect DB/driver defaults; document long-running jobs if added later.
+- Do not block the event loop with CPU-heavy work in request handlers.

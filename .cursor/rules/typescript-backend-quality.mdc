@@ -1,0 +1,13 @@
+---
+description: TypeScript quality for NestJS backend code
+globs: src/**/*.ts
+alwaysApply: false
+---
+
+# TypeScript backend quality
+
+- Prefer explicit types on public APIs; avoid `any`; use generics on `getRequest<T>()` / guards.
+- Functions: one clear responsibility; extract helpers when nesting exceeds two levels.
+- Dependencies: constructor injection only; avoid service locators and hidden singletons.
+- Config: use `ConfigService` for secrets and TTLs — not raw `process.env` in hot paths (except bootstrap).
+- Match existing naming (`camelCase` TS, Drizzle schema casing conventions).

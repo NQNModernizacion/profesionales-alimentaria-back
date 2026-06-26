@@ -1,0 +1,13 @@
+---
+description: Unit and integration test conventions
+globs: "**/*.spec.ts,test/**/*.ts"
+alwaysApply: false
+---
+
+# Testing standards
+
+- **AAA** (Arrange / Act / Assert); one logical behavior per test.
+- Mock **interfaces** (`ADMIN_IDENTITY_REPOSITORY`), not Drizzle/Redis directly in strategy/service tests.
+- Prefer `Test.createTestingModule` for Nest providers.
+- After refactors, add or update tests for public behavior — especially auth and revocation paths.
+- Auth coverage gate: `pnpm run test:cov:auth` must pass before merge when changing `src/auth/**`.

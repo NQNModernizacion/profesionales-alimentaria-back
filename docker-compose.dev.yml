@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deps
+    working_dir: /app
+    command:
+      ["sh", "-c", "pnpm db:migrate && pnpm db:seed && pnpm run start:dev"]
+    env_file:
+      - .env.docker
+    environment:
+      NODE_ENV: development
+      API_BASE_URL: http://localhost:3000
+      # Polling required for Windows host → Docker file watching
+      CHOKIDAR_USEPOLLING: 'true'
+      CHOKIDAR_INTERVAL: '1000'
+      WATCHPACK_POLLING: 'true'
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./.env.docker
+          target: /app/.env.docker
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+        - action: rebuild
+          path: ./Dockerfile

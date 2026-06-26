@@ -1,0 +1,13 @@
+---
+description: Repository pattern and data access
+globs: "**/repositories/**/*.ts,**/*.repository.ts"
+alwaysApply: false
+---
+
+# Data access patterns
+
+- **Repository**: interface in the feature module; implementation in `repositories/` (e.g. Drizzle, Redis).
+- **Inject** with a symbol token (`Symbol('...')`) when multiple implementations or testing mocks are expected.
+- **Queries**: encapsulate Drizzle `eq` / joins inside the repository — not in controllers.
+- **MySQL admin**: wrap federated connectivity errors consistently (503 vs rethrow).
+- **Transactions**: if needed later, scope at repository or unit-of-work — not ad hoc in strategies.

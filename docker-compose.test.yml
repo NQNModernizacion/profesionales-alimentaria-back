@@ -1,0 +1,43 @@
+name: nest-template-test
+
+services:
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deps
+    working_dir: /app
+    env_file:
+      - .env.test.docker
+    environment:
+      API_BASE_URL: http://localhost:3000
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_started
+    command: ["pnpm", "run", "test:e2e"]
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+  postgres-test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nest_template_test
+      POSTGRES_USER: nest_template_test_user
+      POSTGRES_PASSWORD: nest_template_test_password
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nest_template_test_user -d nest_template_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
