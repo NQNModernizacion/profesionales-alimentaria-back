@@ -181,6 +181,57 @@ export const votes = pgTable(
   ],
 );
 
+/**
+ * solicitudes — solicitudes de registro de profesionales del área alimentaria.
+ * owner_id es admin.users.id (JWT sub); no hay FK porque la identidad vive en MySQL admin.
+ * Los datos personales se guardan como SNAPSHOT declarado (la DDJJ atesta datos al enviar).
+ * `estado` se persiste como slug; el API lo traduce a display (ver solicitudes.mapper.ts).
+ */
+export const solicitudEstadoEnum = pgEnum('solicitud_estado', [
+  'borrador',
+  'enviada',
+  'en_revision',
+  'aprobada',
+  'rechazada',
+  'publicada',
+  'no_publicada',
+]);
+
+export const solicitudes = pgTable('solicitudes', {
+  id: serial('id').primaryKey(),
+  ownerId: bigint('owner_id', { mode: 'number' }).notNull(),
+  estado: solicitudEstadoEnum('estado').notNull().default('borrador'),
+  // Snapshot de datos personales (declarados)
+  nombre: varchar('nombre', { length: 150 }).notNull(),
+  apellido: varchar('apellido', { length: 150 }).notNull(),
+  dni: varchar('dni', { length: 20 }).notNull(),
+  cuit: varchar('cuit', { length: 20 }).notNull(),
+  fechaNacimiento: varchar('fecha_nacimiento', { length: 20 }).notNull(),
+  domicilio: varchar('domicilio', { length: 300 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  telefono: varchar('telefono', { length: 50 }).notNull(),
+  // Datos profesionales
+  tituloId: varchar('titulo_id', { length: 100 }).notNull(),
+  matricula: varchar('matricula', { length: 100 }).notNull(),
+  matriculaVigente: boolean('matricula_vigente').notNull().default(false),
+  // Áreas de servicio
+  areas: jsonb('areas').$type<string[]>().notNull().default([]),
+  areasOtros: varchar('areas_otros', { length: 300 }).notNull().default(''),
+  // Declaraciones
+  aceptaDdjj: boolean('acepta_ddjj').notNull().default(false),
+  consientePublicacion: boolean('consiente_publicacion')
+    .notNull()
+    .default(false),
+  // Administración
+  motivoRechazo: text('motivo_rechazo'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 // Relations
 export const permissionsRelations = relations(permissions, ({ many }) => ({
   rolePermissions: many(rolePermissions),
