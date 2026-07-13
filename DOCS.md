@@ -1,4 +1,4 @@
-# Nest Template — Documentación Técnica
+# Profesionales Alimentaria — Documentación Técnica
 
 > Plantilla backend NestJS con identidad dual (MySQL `admin` + PostgreSQL), Redis, JWT y Docker. Diseñada como punto de partida para APIs internas donde la identidad vive en una BD corporativa (MySQL) y el negocio en PostgreSQL.
 
@@ -230,7 +230,7 @@ Referencia tomada de [`.env.example`](.env.example). Usa `.env` para desarrollo 
 
 | Variable | Ejemplo | Descripción |
 |---|---|---|
-| `DATABASE_URL` | `postgresql://nest_template_user:nest_template_password@localhost:5432/nest_template` | PostgreSQL (Drizzle) |
+| `DATABASE_URL` | `postgresql://profesionales_alimentaria_user:profesionales_alimentaria_password@localhost:5432/profesionales_alimentaria` | PostgreSQL (Drizzle) |
 | `ADMIN_DATABASE_URL` | `mysql://root@localhost:3306/admin` | MySQL `admin` (solo lectura) |
 | `REDIS_URL` | `redis://127.0.0.1:6379` | Redis |
 

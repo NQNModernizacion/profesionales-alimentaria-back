@@ -1,8 +1,39 @@
-# Nest Template
+# Profesionales Alimentaria — Backend
 
-> Template backend NestJS listo para producción con identidad dual (MySQL `admin` + PostgreSQL), Redis, JWT, Docker y un pipeline de quality gate estricto.
+> API NestJS del **Registro Municipal de Profesionales del Área Alimentaria** (Dirección General de Bromatología, Municipalidad de Neuquén).
 
-Este repositorio es una **plantilla reutilizable**. Trae el stack listo, las convenciones, las reglas para agentes de IA (`.cursor/rules/`, `.agents/skills/`) y un script de inicialización que ajusta nombres/envs/docker cuando haces un fork.
+Reemplaza el alta en papel por un flujo digital: un profesional se **inscribe** cargando datos y documentación, Bromatología **valida y da el alta**, y los comercios consultan un **directorio público** de profesionales aprobados.
+
+La lógica de negocio completa (actores, ciclo de vida de la solicitud, reglas de privacidad) vive en [`../REQUIREMENT.md`](../REQUIREMENT.md). Leerlo antes de tocar reglas de dominio.
+
+## Dominio en una pantalla
+
+**Actores**
+
+| Actor | Objetivo |
+|---|---|
+| **Profesional / Solicitante** | Inscribirse en el registro y, opcionalmente, aparecer en el directorio. |
+| **Administrador (Bromatología)** | Verificar requisitos y mantener el registro depurado y confiable. |
+| **Comercio / Visitante** | Encontrar un profesional habilitado para dirección técnica, asesoramiento, etc. |
+
+**Ciclo de vida de la Solicitud**
+
+```
+Borrador → Enviada → En revisión → Aprobada → Publicada ⇄ No publicada
+                                  ↘ Rechazada (requiere motivo)
+```
+
+- Solo se dan de alta profesionales con **título vinculado a alimentos** y **matrícula vigente**.
+- Enviar exige documentación obligatoria completa + aceptación de la **Declaración Jurada**.
+- El formulario de inscripción **no es público**: requiere cuenta autenticada.
+- Cada profesional solo ve/edita **sus propias solicitudes** y solo en estados editables (`Borrador` / `Enviada`).
+- Todo **rechazo** debe registrar su motivo (trazabilidad + feedback al profesional).
+
+**Privacidad**
+
+- La publicación en el directorio requiere **consentimiento explícito**, independiente del envío de la solicitud.
+- El directorio público expone **únicamente**: nombre y apellido, profesión, matrícula, áreas de actuación, correo y teléfono.
+- Documentos adjuntos y datos sensibles (DNI, CUIT, fecha de nacimiento, domicilio) **nunca** son públicos: solo los ve el administrador autenticado.
 
 ## Stack
 
@@ -15,40 +46,22 @@ Este repositorio es una **plantilla reutilizable**. Trae el stack listo, las con
 | Base de datos de identidad (read-only) | MySQL `admin` |
 | Cache / rate limit / pub-sub | Redis |
 | Auth | Passport JWT (`@nestjs/jwt`, `passport-jwt`) + bcryptjs |
-| Autorización | CASL (`@casl/ability`) — ganchos listos para ampliar |
+| Autorización | CASL (`@casl/ability`) |
 | Docs API | Swagger (`@nestjs/swagger`) |
 | Testing | Jest (unit + e2e) + cobertura dedicada de `auth` |
 | CI local | `pnpm test:ci` (lint + test + auth coverage + build + audit) |
 | Contenedores | Docker + Docker Compose (base / dev / test) |
 
-## Usar este template
+### Identidad dual
 
-1. Haz fork o clona el repositorio.
-2. Instala dependencias:
-
-   ```bash
-   pnpm install
-   ```
-
-3. Ejecuta el script de inicialización:
-
-   ```bash
-   pnpm tsx initTemplate.ts
-   ```
-
-   Te pedirá:
-   - Nombre humano de la app (p. ej. `Mi Backend API`).
-   - Slug en kebab-case (p. ej. `mi-backend-api`).
-   - Descripción (opcional).
-
-   El script actualiza `package.json`, `src/main.ts` (Swagger), `docker-compose*.yml`, `.env*`, la colección de Postman y la documentación. Al terminar, se autoelimina junto con `configApp.ts` legacy.
+La identidad vive **exclusivamente en MySQL `admin`** (externa, read-only). PostgreSQL es la base de negocio y autorización. **No hay tabla `users` en PostgreSQL.** El `sub` del JWT es siempre `admin.users.id`; los roles/permisos se resuelven en PostgreSQL. Detalle en [`CLAUDE.md`](CLAUDE.md) y [`DOCS.md`](DOCS.md).
 
 ## Requisitos
 
 - Node.js 22+
-- pnpm 9+ (`corepack enable`)
+- pnpm 10+ (`corepack enable` — la versión está pineada en `package.json`)
 - Docker Desktop (opcional pero recomendado)
-- Acceso a una BD MySQL con el esquema `admin` (credenciales/personas) si vas a usar el flujo de login real
+- Acceso a una BD MySQL con el esquema `admin` (credenciales/personas) para el flujo de login real
 
 ## Quick start local
 
@@ -139,6 +152,8 @@ src/
 └── interceptors/           # Interceptores transversales
 ```
 
+Cada feature de negocio nueva agrega un directorio hermano con `*.module.ts`, `*.controller.ts`, `*.service.ts`, `*.repository.ts` y se registra en `app.module.ts`.
+
 ## Calidad y convenciones
 
 - Reglas para IDE/agentes en [`.cursor/rules/`](.cursor/rules/) (arquitectura, DRY/KISS/SOLID, seguridad, testing, repositorios).
@@ -147,4 +162,4 @@ src/
 
 ## Licencia
 
-UNLICENSED. Ajusta [`package.json`](package.json) y añade tu licencia al crear tu proyecto a partir de este template.
+UNLICENSED.
