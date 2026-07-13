@@ -56,6 +56,8 @@ export interface AdminUser {
     celular?: string | null;
     correoElectronico?: string | null;
     direccionCompleta?: string | null;
+    cuil?: string | null;
+    fechaNacimiento?: string | null;
   } | null;
 }
 

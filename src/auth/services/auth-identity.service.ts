@@ -106,6 +106,12 @@ export class AuthIdentityService {
       celular: p.celular,
       correoElectronico: p.correoElectronico,
       direccionCompleta: p.direccionCompleta,
+      cuil: p.cuil,
+      fechaNacimiento: p.fechaNacimiento
+        ? p.fechaNacimiento instanceof Date
+          ? p.fechaNacimiento.toISOString().slice(0, 10)
+          : String(p.fechaNacimiento)
+        : null,
     };
   }
 

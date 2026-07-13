@@ -63,11 +63,41 @@ describe('AuthIdentityService', () => {
         celular: null,
         correoElectronico: null,
         direccionCompleta: null,
+        cuil: '20-12345678-9',
+        fechaNacimiento: '1990-01-01',
       });
 
       const u = await service.authenticateByEmail('a@b.com');
       expect(u.id).toBe(1);
       expect(u.persona?.nombres).toBe('N');
+      expect(u.persona?.cuil).toBe('20-12345678-9');
+      expect(u.persona?.fechaNacimiento).toBe('1990-01-01');
+    });
+
+    it('coerces a Date to YYYY-MM-DD when Drizzle returns a Date', async () => {
+      identity.findUserByEmail.mockResolvedValue({
+        id: 2,
+        email: 'c@d.com',
+        password: 'hash',
+        tokenWeblogin: null,
+      });
+      identity.findUsuarioByReferenciaId.mockResolvedValue({ personaId: 11 });
+      identity.findPersonaById.mockResolvedValue({
+        id: 11,
+        documento: 2,
+        nombres: 'C',
+        apellidos: 'D',
+        nombreCompleto: null,
+        genero: 'M',
+        celular: null,
+        correoElectronico: null,
+        direccionCompleta: null,
+        cuil: '20-12345678-9',
+        fechaNacimiento: new Date('1990-01-01T00:00:00Z'),
+      });
+
+      const u = await service.authenticateByEmail('c@d.com');
+      expect(u.persona?.fechaNacimiento).toBe('1990-01-01');
     });
   });
 
@@ -96,6 +126,8 @@ describe('AuthIdentityService', () => {
         celular: null,
         correoElectronico: null,
         direccionCompleta: null,
+        cuil: null,
+        fechaNacimiento: null,
       });
       identity.findUsuarioByPersonaId.mockResolvedValue({
         referenciaId: 7,
