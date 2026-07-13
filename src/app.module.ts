@@ -10,6 +10,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { RedisModule } from './redis/redis.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AdminPanelModule } from './admin-panel/admin-panel.module';
+import { SolicitudesModule } from './solicitudes/solicitudes.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminPanelModule } from './admin-panel/admin-panel.module';
     RedisModule,
     AuthModule,
     AdminPanelModule,
+    SolicitudesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -27,7 +27,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('Nest Template API')
+      .setTitle('Profesionales Alimentaria API')
       .setDescription('Documentación de endpoints del template NestJS.')
       .setVersion('1.0')
       .addBearerAuth(

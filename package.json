@@ -1,10 +1,11 @@
 {
-  "name": "nest-template",
+  "name": "profesionales-alimentaria",
   "version": "0.0.1",
-  "description": "Template backend NestJS con identidad dual MySQL admin + PostgreSQL + Redis + JWT + Docker.",
+  "description": "APIpara la gestion de inscripciones de profesionales de el sector alimentario",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

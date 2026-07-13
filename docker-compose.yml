@@ -1,4 +1,4 @@
-name: nest-template
+name: profesionales-alimentaria
 
 services:
   app:
@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-    image: nest-template:latest
+    image: profesionales-alimentaria:latest
     command: ["sh", "-c", "pnpm db:migrate && pnpm db:seed:prod && node dist/main"]
     env_file:
       - .env.docker
@@ -24,13 +24,13 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: nest_template
-      POSTGRES_USER: nest_template_user
-      POSTGRES_PASSWORD: nest_template_password
+      POSTGRES_DB: profesionales_alimentaria
+      POSTGRES_USER: profesionales_alimentaria_user
+      POSTGRES_PASSWORD: profesionales_alimentaria_password
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U nest_template_user -d nest_template"]
+      test: ["CMD-SHELL", "pg_isready -U profesionales_alimentaria_user -d profesionales_alimentaria"]
       interval: 5s
       timeout: 5s
       retries: 20
